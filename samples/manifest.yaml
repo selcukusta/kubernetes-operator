@@ -1,0 +1,59 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sampleapp-dep
+spec:
+  revisionHistoryLimit: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 100%
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampleapp
+  template:
+    metadata:
+      labels:
+        app: sampleapp
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: sampleapp
+          image: selcukusta/reload-config-sample:1.0.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              memory: "400Mi"
+          readinessProbe:
+            httpGet:
+              path: "/api/values"
+              port: 80
+            initialDelaySeconds: 10
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: config-volume
+              mountPath: /configurations
+      volumes:
+        - name: config-volume
+          configMap:
+            name: sampleconfig
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sampleapp-svc
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - "YOUR_MINIKUBE_IP"
+  selector:
+    app: sampleapp
+  ports:
+    - port: 80
+      name: http
+      targetPort: 80
+      nodePort: 30002

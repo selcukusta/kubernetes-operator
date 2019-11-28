@@ -1,0 +1,16 @@
+apiVersion: selcukusta.com/v1alpha1
+kind: NetCoreConfigManagement
+metadata:
+  name: example-netcoreconfigmanagement
+spec:
+  linkedDeployments:
+    - sampleapp-dep
+  config:
+    configMapName: sampleconfig
+    configMapKey: appsettings.Kubernetes.json
+    configMapValue: |
+      {
+        "ConfigMapOptions": {
+            "Hello": "Neptune!"
+        }
+      }
