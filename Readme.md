@@ -71,13 +71,9 @@ kubectl apply -f samples/manifest.yaml
 
 ```bash
 # Request the application per second
-while true; do sleep 1; curl http://YOUR_MINIKUBE_IP:30002/api/values;echo -e '\n';done
+while true; do sleep 1; curl http://YOUR_MINIKUBE_IP:30002/api/values;echo -e "\t$(date)";done
 # Initial output should be;
-# [
-#   "sampleapp-dep-55b48c48b9-dz6qh",   # Hostname
-#   "World!",                           # Config value from mounted file
-#   "1.0.0"                             # Config value from static file
-# ]
+# ["sampleapp-dep-56f8f597c5-v5fsx","Neptune!","1.0.0"]	Thu Nov 28 12:22:15 +03 2019
 ```
 
 Open `deploy/crds/selcukusta.com_v1alpha1_netcoreconfigmanagement_cr.yaml` file and change the `World!` as `Neptune!`. Then re-run `kubectl apply -f deploy/crds/selcukusta.com_v1alpha1_netcoreconfigmanagement_cr.yaml`.
